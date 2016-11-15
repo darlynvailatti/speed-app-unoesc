@@ -1,0 +1,20 @@
+Websocket support is enabled
+/usr/lib/python2.7/importlib/__init__.py:37: RemovedInDjango110Warning: django.core.context_processors is deprecated in favor of django.template.context_processors.
+  __import__(name)
+
+[06/Nov/2016 16:41:14] "GET /speedapp/ HTTP/1.1" 200 2521
+[06/Nov/2016 16:41:14] "GET /static/jquery.mobile/jquery.mobile-1.4.5.min.css HTTP/1.1" 200 207465
+[06/Nov/2016 16:41:14] "GET /static/css/custom.css HTTP/1.1" 200 3338
+[06/Nov/2016 16:41:14] "GET /static/css/loading.css HTTP/1.1" 200 355
+[06/Nov/2016 16:41:14] "GET /static/js/jquery.js HTTP/1.1" 200 258648
+[06/Nov/2016 16:41:14] "GET /static/jquery.mobile/jquery.mobile-1.4.5.min.js HTTP/1.1" 200 200143
+[06/Nov/2016 16:41:14] "GET /static/js/highcharts.js HTTP/1.1" 200 191668
+[06/Nov/2016 16:41:14] "GET /static/js/exporting.js HTTP/1.1" 200 9302
+[06/Nov/2016 16:41:14] "GET /static/js/ws4redis.js HTTP/1.1" 200 4386
+[06/Nov/2016 16:41:14] "GET /static/midia/unoesc.png HTTP/1.1" 200 137392
+[06/Nov/2016 16:41:15] "GET /static/jquery.mobile/images/ajax-loader.gif HTTP/1.1" 200 6242
+[06/Nov/2016 16:41:15] "GET /static/midia/atletas_icon.png HTTP/1.1" 200 16698
+[06/Nov/2016 16:41:15] "GET /static/midia/testes_icon.png HTTP/1.1" 200 11579
+[06/Nov/2016 16:41:15] "GET /static/midia/sensor_icon.png HTTP/1.1" 200 7654
+Not Found: /favicon.ico
+[06/Nov/2016 16:41:15] "GET /favicon.ico HTTP/1.1" 404 2042

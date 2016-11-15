@@ -1,0 +1,139 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+    <div data-role="header" data-position="fixed">
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            {% include "speedapp/includes/botaoVoltar.html" %}
+        </div>
+        <h6>Sensores</h6>
+        <span
+            class="glyphicon-refresh-animate ui-li-aside
+            ui-btn ui-corner-all ui-icon-refresh
+            ui-btn-b ui-btn-icon-notext ui-mini ui-btn-right">
+        </span>
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+
+    <ul data-role="listview" >
+        <li id="msgSucessoConexaoDiv" class="elementToFadeIn webSocketSucessoConexao">
+            <h2>Sucesso na conexão</h2>
+            <p id="msgSucessoConexao">
+                <span class="ui-li-aside ui-btn ui-shadow ui-corner-all ui-icon-success ui-btn-b ui-btn-icon-notext"></span>
+                Forçe detecções nos sensores conectados!
+            </p>
+        </li>
+        <li id="msgFalhaConexaoDiv" class="elementToFadeIn webSocketFalhaConexao">
+            <h2>Falha na conexão</h2>
+            <p id="msgFalhaConexao">
+                <span class="ui-li-aside ui-btn ui-shadow ui-corner-all ui-icon-warning ui-btn-b ui-btn-icon-notext"></span>
+                Verifique a conexão com a plataforma!
+            </p>
+        </li>
+    </ul>
+
+    <br>
+
+    <ul id="sensores" data-role="listview" data-inset="true">
+       <!-- Inserir nesta div atraves de jquery -->
+        {% for s in sensores %}
+            <li data-icon="false">
+                <a>
+                    <div class="circle-sensor">S:{{ s.numero }}</div>
+                    <p id="s_{{ s.numero }}_dataUltimoReconhecimento">
+                        Última detecção:{{ s.dataUltimoReconhecimento|date:"d/m/y h:m:s" }}
+                    </p>
+                    <span id="s_{{ s.numero }}"
+                          class="ui-li-aside ui-btn ui-shadow ui-corner-all ui-icon-sensor ui-btn-icon-notext
+                          elementToFadeInAndOut"></span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script type="text/javascript">
+        $(document).ready(function($) {
+
+            var ws4redis = WS4Redis({
+                uri: '{{ WEBSOCKET_URI }}monitoraSensores?subscribe-broadcast&publish-broadcast&echo',
+                connecting: on_connecting,
+                connected: on_connected,
+                receive_message: receiveMessage,
+                disconnected: on_disconnected,
+                heartbeat_msg: {{ WS4REDIS_HEARTBEAT }}
+            });
+
+            function sendMessage(msg) {
+                ws4redis.send_message(msg);
+            }
+
+            function on_connecting() {
+                console.log('Websocket is connecting...');
+            }
+
+            function on_connected() {
+                msgSucessoConexao();
+                d = new Date();
+                timeInicio = d.getTime();
+
+            }
+
+            function on_disconnected(evt) {
+                msgFalhaConexao();
+                ws4redis.send_message('Desconectado!');
+            }
+
+            function receiveMessage(msg) {
+
+                //Dados recebidos
+                atualizaViewSensores(msg);
+
+            }
+
+            function atualizaViewSensores(obj){
+                sensorHtml = 's_';
+                sensorDataUltimoReconhecimento = '_dataUltimoReconhecimento';
+
+                if(obj != ''){
+
+                    sensores = JSON.parse(obj);
+
+                    //Percorre todos os sensores e adiciona na listView
+                    for(var s in sensores){
+                        sensor = sensores[s];
+
+                        //Data ultimo reconhecimento
+                        componenteHtml = sensorHtml + sensor.numero + sensorDataUltimoReconhecimento;
+                        $('#' + componenteHtml).html("Última detecção:" + sensor.dataUltimoReconhecimento);
+
+
+                        //Situacao do sensor
+
+                        if(sensor.ativo == 'False'){
+                            $('#s_' + sensor.numero).addClass('elementToFadeInAndOut');
+                        }
+
+                        if(sensor.ativo == 'True'){
+                            $('#s_' + sensor.numero).removeClass('elementToFadeInAndOut');
+                        }
+
+                    }
+                }
+            }
+
+            function msgFalhaConexao(){
+                $('#msgFalhaConexaoDiv').show();
+                $('#msgSucessoConexaoDiv').hide();
+
+            }
+
+            function msgSucessoConexao(){
+                $('#msgSucessoConexaoDiv').show();
+                $('#msgFalhaConexaoDiv').hide();
+            }
+
+        });
+    </script>
+
+{% endblock %}

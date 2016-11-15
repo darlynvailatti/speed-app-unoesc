@@ -1,0 +1,38 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+<!-- Botoes -->
+<div data-role="header" data-position="true">
+    {% include "speedapp/includes/botaoVoltar.html" %}
+
+    <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+        <a class="ui-btn ui-btn-icon-left ui-icon-back"
+           href="/speedapp/">Voltar</a>
+    </div>
+
+    <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+        <a href="novoTeste" class="ui-btn ui-btn-icon-right ui-icon-plus">Novo</a>
+    </div>
+    <h6>Testes</h6>
+</div>
+{% endblock %}
+
+{% block conteudo %}
+
+<ul data-role="listview" data-theme="a" data-inset="true">
+    {% for teste in testes %}
+    <li>
+        <a href="{{ teste.id }}">
+            <h2>{{ teste.descricao }}</h2>
+            <p>{{ teste.id }}</p>
+        </a>
+        <p class="ui-li-aside"><strong>{{ teste.dataHora|date:"d/m/y h:m:s" }}</strong></p>
+    </li>
+    {% empty %}
+    <li>
+        Nenhum teste cadastrado...
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+

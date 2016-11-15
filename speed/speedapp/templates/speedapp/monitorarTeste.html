@@ -1,0 +1,318 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+    <div data-role="header" data-position="fixed">
+
+        <a id="btnConfirmar"
+                class="ui-btn ui-btn-icon-left ui-icon-check"
+           href="/speedapp/atletas/{{ atleta.id }}/testes/{{ teste.id }}/atletaTesteDetail">Confirmar</a>
+
+        <h2>Teste {{ teste.id }}</h2>
+
+        <a id="btnReiniciar"
+           class="ui-btn ui-btn-icon-right ui-icon-refresh" data-ajax="false"
+           href="/speedapp/atletas/{{ atleta.id }}/testes/{{ teste.id }}/monitorarTeste">Reiniciar</a>
+
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+<ul data-role="listview" data-inset="true">
+    <li data-role="list-divider" >
+        <h2>{{ teste.descricao }}</h2>
+    </li>
+    <li>
+        <span id="TesteStatus"></span>
+        <span id="TesteDetectou"
+              class="ui-li-aside ui-btn ui-shadow ui-corner-all ui-icon-sensor ui-btn-icon-notext
+                     elementToFadeInAndOut"
+                style="right:5px;top:5px;"></span>
+    </li>
+    <li>
+        <div class="ui-grid-d">
+            <div class="ui-block-a">
+                <h1>Tempo</h1>
+                <div id="tempo">
+
+                </div>
+            </div>
+            <div class="ui-block-b">
+                <h1>Voltas</h1>
+                <div id="voltas">
+
+                </div>
+            </div>
+            <div class="ui-block-c">
+                <h1>BPM</h1>
+                <div id="bpmMonitor">
+                    <div id="bpm">
+
+                    </div>
+                </div>
+            </div>
+            <div class="ui-block-d">
+                <h1>Temp.</h1>
+                <div id="temperatura">
+
+                </div>
+            </div>
+            <div class="ui-block-e">
+                <h1>Umd.</h1>
+                <div id="umidade">
+
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+
+<!-- Voltas -->
+<ul data-role="listview" id="voltasRealizadas" data-inset="true">
+
+</ul>
+
+
+<script type="text/javascript">
+
+$(document).ready(function($) {
+
+    /*
+        Globais
+    */
+    var audioDeteccao = new Audio('/static/audio/bleep.mp3');
+
+
+    /*
+     #################################################
+     #           LIMPAR DADOS TESTES ANTERIORES      #
+     #################################################
+    */
+
+
+
+
+
+    /*
+     #################################################
+     #           SOCKET DETALHES DO TESTE            #
+     #################################################
+    */
+
+    var wsTeste = WS4Redis({
+        uri: '{{ WEBSOCKET_URI }}wsTeste?subscribe-broadcast&publish-broadcast&echo',
+        connecting: on_connectingWsTeste,
+        connected: on_connectedWsTeste,
+        receive_message: receiveMessageWsTeste,
+        disconnected: on_disconnectedWsTeste,
+        heartbeat_msg: {{ WS4REDIS_HEARTBEAT }}
+    });
+
+    function sendMessageWsTeste(msg) {
+        wsTeste.send_message(msg);
+    }
+
+    function on_connectingWsTeste() {
+        console.log('Websocket is connecting...');
+    }
+
+    function on_connectedWsTeste() {
+        wsTeste.send_message('Ola from client');
+    }
+
+    function on_disconnectedWsTeste(evt) {
+        wsTeste.send_message('Desconectado!');
+    }
+
+    function receiveMessageWsTeste(obj) {
+        processaJSONTeste(obj);
+    }
+
+    function processaJSONTeste(obj){
+        if(obj != ''){
+            objetos = JSON.parse(obj);
+
+            //Leitura do JSON
+            voltas           = objetos.voltas;
+            voltasRealizadas = objetos.voltasRealizadas;
+            qtdVoltas        = objetos.qtdVoltas;
+            percentual       = objetos.percentual;
+            tempoTotalTeste  = objetos.tempoTotalTeste;
+            bpm              = objetos.bpm;
+            temperatura      = objetos.temperatura;
+            umidade          = objetos.umidade
+            finalizado       = objetos.testeFinalizado;
+
+            atualizaVoltas(voltas,qtdVoltas,voltasRealizadas);
+            //atualizaDeteccoes(deteccoes);
+            atualizaTempo(tempoTotalTeste);
+            atualizaBPM(bpm);
+            atualizaTemperatura(temperatura);
+            atualizaUmidade(umidade);
+            atualizaBotoes(finalizado);
+
+        }
+    }
+
+    function atualizaBotoes(finalizado){
+        if(finalizado){
+            $("#btnConfirmar").show();
+        }else{
+            $("#btnConfirmar").hide();
+        }
+    }
+
+    function atualizaVoltas(voltas,qtdVoltas,voltasRealizadas){
+        $('#voltas').html(voltasRealizadas + " / " + qtdVoltas);
+
+        $('#voltasRealizadas').empty();
+        $('#voltasRealizadas').append(
+            '<li data-role="list-divider" >' +
+                '<div class="ui-grid-c">' +
+
+                    '<div class="ui-block-a">' +
+                        '<img src="/static/midia/bandeira.png" width="35" class="ui-alt-icon" alt="t">' +
+                        '<br/>' +
+                        'Volta' +
+                    '</div>' +
+
+                    '<div class="ui-block-b">' +
+                        '<img src="/static/midia/cronometro.png" width="35" class="ui-alt-icon" alt="t">' +
+                        '<br/>' +
+                        'Tempo' +
+                    '</div>' +
+
+                    '<div class="ui-block-c">' +
+                        '<img src="/static/midia/velocidade_media.png" width="35" class="ui-alt-icon" alt="t">' +
+                        '<br/>' +
+                        'V.M' +
+                    '</div>' +
+
+                    '<div class="ui-block-e">' +
+                        '<img src="/static/midia/velocimetro.png" width="35" class="ui-alt-icon" alt="t">' +
+                        '<br/>' +
+                        'V.G' +
+                    '</div>' +
+
+                '</div>'+
+            '</li>'
+        );
+
+        for(var v in voltas){
+            $('#voltasRealizadas').append(
+            '<li>' +
+                '<div class="ui-grid-c">' +
+
+                    '<div class="ui-block-a">' +
+                        voltas[v].numero +
+                    '</div>' +
+
+                    '<div class="ui-block-b">' +
+                            voltas[v].tempoDecorrido.toFixed(2) + 's' +
+                    '</div>' +
+
+                    '<div class="ui-block-c">' +
+                            voltas[v].velocidadeMedia.toFixed(2) + 'm/s' +
+                    '</div>' +
+
+                    '<div class="ui-block-e">' +
+                            voltas[v].velocidadeGeral.toFixed(2) + 'm/s' +
+                    '</div>' +
+                '</div>' +
+            '</li>'
+            );
+        }
+        $('#voltasRealizadas').listview('refresh');
+    }
+
+    function atualizaTemperatura(temperatura){
+        if(temperatura)
+            $('#temperatura').html(parseFloat(temperatura).toFixed(1));
+    }
+
+    function atualizaUmidade(umidade){
+        if(umidade)
+            $('#umidade').html(umidade + '%');
+    }
+
+    function atualizaDeteccoes(deteccoes){
+
+    }
+
+    function atualizaTempo(tempo){
+        $('#tempo').html(tempo.toFixed(2));
+    }
+
+    function atualizaBPM(bpm){
+        $('#bpm').html(bpm);
+    }
+
+    /*
+     #################################################
+     #              SOCKET CABECALHO                 #
+     #################################################
+    */
+
+    var wsTestecabecalho = WS4Redis({
+        uri:             '{{ WEBSOCKET_URI }}wsTesteCabecalho?subscribe-broadcast&publish-broadcast&echo',
+        connecting:      on_connectingWsTesteCabecalho,
+        connected:       on_connectedWsTesteCabecalho,
+        receive_message: receiveMessageWsTesteCabecalho,
+        disconnected:    on_disconnectedWsTesteCabecalho,
+        heartbeat_msg:   {{ WS4REDIS_HEARTBEAT }}
+    });
+
+    function on_connectingWsTesteCabecalho(){
+
+    }
+
+    function on_connectedWsTesteCabecalho(){
+
+    }
+
+    function receiveMessageWsTesteCabecalho(msg){
+        if(msg != ''){
+            obj = JSON.parse(msg);
+            processaJSONCabecalho(obj);
+            processaJSONDetecao(obj);
+        }
+    }
+
+    function on_disconnectedWsTesteCabecalho(evt){
+
+    }
+
+    function processaJSONDetecao(obj){
+        if(obj.testeDeteccao == true){
+            audioDeteccao.play();
+        }
+    }
+
+    function processaJSONCabecalho(obj){
+
+        $('#TesteStatus').html(obj.testeStatus);
+
+        if(obj.testeDeteccao != true){
+            $('#TesteDetectou').addClass('elementToFadeInAndOut');
+        }else{
+            $('#TesteDetectou').removeClass('elementToFadeInAndOut');
+            console.log('Detectou');
+        }
+
+        if(obj.testeSituacao == false){
+            $('#testeSituacaoEmExecucao').hide();
+            $('#testeSituacaoEncerrado').show();
+        }else{
+            $('#testeSituacaoEmExecucao').show();
+            $('#testeSituacaoEncerrado').hide();
+        }
+    }
+
+});
+
+
+
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% for s in sensores %}
+
+            {% if s.ativo %}
+            <!-- quando esta ativo -->
+
+            {% else %}
+            <!-- quando esta inativo -->
+
+            {% endif %}
+            <li>
+                <a href="#">
+                    <!--<img src="../_assets/img/album-bb.jpg">-->
+                    <h2>S:{{ s.numero }}</h2>
+                    <p>Último detecção: {{ s.dataUltimoReconhecimento|date:"d/m/Y H:m:s" }}</p>
+                </a>
+            </li>
+{% endfor %}
+
+

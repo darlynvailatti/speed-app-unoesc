@@ -1,0 +1,68 @@
+{% extends "speedapp/base.html" %}
+
+
+{% block header %}
+    <div data-role="header" data-position="fixed">
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <a class="ui-btn ui-btn-icon-left ui-icon-back"
+                    href="/speedapp/atletas/{{ atleta.id }}/testes/{{ teste.id }}/atletaTesteDetail">Voltar</a>
+        </div>
+        <h6>Arestas</h6>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <a href="novoAresta" class="ui-btn ui-btn-icon-right ui-icon-plus" data-ajax="False">Novo</a>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block conteudo %}
+
+    <!-- Exemplo de aresta -->
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a circle-sensor-exemplo" style="text-align:center;">
+            A
+        </div>
+        <div class="ui-block-b" style="text-align:center;">
+            <img src="/static/midia/seta_direita.png" width="50px"/>
+        </div>
+        <div class="ui-block-c circle-sensor-exemplo" style="text-align:center;">
+            B
+        </div>
+    </fieldset>
+
+    <ul data-role="listview" data-inset="true">
+
+        {% for aresta in arestas %}
+        <li class="ui-body ui-body-a" style="text-align:center;">
+            <a href="arestas/{{ aresta.id }}" data-transition="slide" style="text-align:center;">
+                <fieldset class="ui-grid-a">
+                    <div class="ui-block-a circle">
+                        {{ aresta.sensor_a.numero }}
+                    </div>
+
+                    <div class="ui-block-b">
+                        <img src="/static/midia/regua.png" width="120px"
+                                style="margin: -50px -40px -70px -30px;"/>
+                        <br>
+                        <span style="font-size:12px;">
+                            {{ aresta.distancia }} m
+                            </span>
+                        <br>
+                        {{ aresta.descricao }}
+                    </div>
+
+                    <div class="ui-block-c circle">
+                        {{ aresta.sensor_b.numero }}
+                    </div>
+                </fieldset>
+
+            </a>
+        </li>
+        {% empty %}
+        <li>
+            <p><h2>Nenhuma aresta cadastrada...</h2></p>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

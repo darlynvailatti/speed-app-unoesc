@@ -1,0 +1,14 @@
+{% extends "speedapp/base.html" %}
+
+{% block conteudo %}
+    <ul data-role="listview" data-inset="true">
+        <li><a href="atletas/" data-transition="slide" class="ui-icon-atletas">Atletas</a></li>
+        <li><a href="testes/" data-transition="slide" class="ui-icon-teste">Testes</a></li>
+        <li><a href="sensores/" data-transition="slide" class="ui-icon-sensor">Sensores</a></li>
+        <li><a href="#" data-transition="slide">Configuracoes</a></li>
+    </ul>
+
+<div style="width: 100%; margin: 0 auto; text-align: center">
+    <img src="/static/midia/unoesc.png" width="30%" height="30%">
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+<!-- Formulario -->
+<form action="saveTeste" method="POST">
+    <div data-role="header" data-position="fixed">
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <a class="ui-btn ui-btn-icon-left ui-icon-back"
+               href="/speedapp/testes/">Voltar</a>
+        </div>
+        <h6>Teste {{ teste.id }}</h6>
+        <div data-role="navbar">
+            <ul>
+                <li>
+                    <a href="deleteTeste/{{ teste.id }}"
+                       class="ui-btn ui-btn-icon-right ui-icon-delete">Excluir</a>
+                </li>
+                <li>
+                    <button type="submit"
+                            class="ui-btn ui-btn-icon-right ui-icon-check" data-ajax="false">Salvar</button>
+                </li>
+            </ul>
+        </div><!-- /navbar -->
+    </div>
+{% endblock %}
+
+
+{% block conteudo %}
+
+    {% csrf_token %}
+    <input type="hidden"  name="id" value="{{ teste.id }}">
+
+    <ul id="testeDados" data-role="listview" data-inset="true">  
+        <li>
+            <label for="{{ form.descricao.id_for_label }}">{{ form.descricao.label }}</label>
+            <input type="text" name="{{ form.descricao.name }}"
+                   id="{{ form.descricao.id_for_label }}"
+                   value="{{ form.descricao.value }}"
+                   data-clear-btn="true">
+        </li>
+        <li>
+            {{ form.tipo.label }}
+            {{ form.tipo }}
+        </li>
+
+        <li>
+            <fieldset class="ui-grid-a">
+
+                <div class="ui-block-a">
+                    <label for="{{ form.qtdVoltas.id_for_label }}">{{ form.qtdVoltas.label }}</label>
+                    <input type="number"  id="{{ form.qtdVoltas.id_for_label }}" name="{{ form.qtdVoltas.name }}" value="{{ form.qtdVoltas.value }}">
+                </div>
+
+                <div class="ui-block-b">
+                    <labe for="{{ form.tempoTotalMax.id_for_label }}">{{ form.tempoTotaMax.label }} (segundos)</labe>
+                    <input type="number" id="{{ form.tempoTotalMax.id_for_label }}" name="{{ form.tempoTotalMax.name }}" value="{{ form.tempoTotalMax.value }}">
+                </div>
+
+            </fieldset>
+        </li>
+
+        {% if teste.id != None %}
+        <li>
+            <a class="ui-icon-graph"
+               href="{{ teste.id }}/arestas"
+               data-transition="slide">Arestas</a>
+        </li>
+        {% endif %}
+
+    </ul>
+</form>
+
+{{ errors }}
+<script>
+    $('#id_tipo').change(function() {
+        tipo = $(this).val();
+
+        if(tipo == 0){
+            $('#id_tempo').prop('disabled', true);
+            $('#id_qtdVoltas').prop('disabled', false);
+        }else if(tipo == 1){
+            $('#id_tempo').prop('disabled', false);
+            $('#id_qtdVoltas').prop('disabled', true);
+        }
+
+        $('#testeDados').listview('refresh');
+
+    });
+</script>
+
+{% endblock %}

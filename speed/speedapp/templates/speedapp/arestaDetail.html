@@ -1,0 +1,79 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+<form action="/speedapp/testes/{{ aresta.teste.id }}/arestas/saveAresta" method="POST" data-ajax="false">
+    <div data-role="header">
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <a class="ui-btn ui-btn-icon-left ui-icon-back"
+               href="/speedapp/testes/{{ aresta.teste.id }}/arestas">Voltar</a>
+        </div>
+        <h6>Aresta:{{ aresta.id }}</h6>
+        <div data-role="navbar">
+            <ul>
+                {% if aresta.id %}
+                <li>
+                    <a href="{{ aresta.id }}/deleteAresta" data-ajax="false"
+                       class="ui-btn ui-btn-icon-right ui-icon-delete">Excluir</a>
+                </li>
+                {% endif %}
+                <li>
+                    <button type="submit" class="ui-btn ui-btn-icon-right ui-icon-check">Salvar</button>
+                </li>
+            </ul>
+
+            <!-- Mensagem de sucesso -->
+            {% if sucesso %}
+                {% include "speedapp/includes/sucesso.html" with msg="Salvo com sucesso!"%}
+            {% endif %}
+
+            {% if erro %}
+                {% include "speedapp/includes/erro.html" with msg=erro%}
+            {% endif %}
+
+        </div><!-- /navbar -->
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+
+    {% csrf_token %}
+    <input type="hidden"  name="id" value="{{ aresta.id }}">
+    <input type="hidden" name="teste" value="{{ aresta.teste.id }}">
+
+    <ul data-role="listview" data-inset="true">
+        <li>
+            <fieldset class="ui-grid-b">
+                <div class="ui-block-a">
+                    {{ form.sensor_a.errors }}
+                    {{ form.sensor_a.label }}
+                    {{ form.sensor_a }}
+                </div>
+
+                <div class="ui-block-b" style="text-align:center;">
+                    <br>
+                    <img src="/static/midia/seta_direita.png" width="60px"/>
+                </div>
+
+                <div class="ui-block-c">
+                    {{ form.sensor_b.errors }}
+                    {{ form.sensor_b.label }}
+                    {{ form.sensor_b }}
+                </div>
+            </fieldset>
+
+        </li>
+        <li>
+            {{ form.descricao.errors }}
+            {{ form.descricao.label }}
+            {{ form.descricao }}
+        </li>
+        <li>
+            {{ form.distancia.errors }}
+            {{ form.distancia.label }}
+            {{ form.distancia }}
+        </li>
+
+
+    </ul>
+</form>
+{% endblock %}

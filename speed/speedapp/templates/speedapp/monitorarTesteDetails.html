@@ -1,0 +1,35 @@
+
+    <ul data-role="listview" class="ui-grid-a" id="geral">
+        <li>
+            <div class="ui-block-a">
+                {{ tempoTotalTeste|floatformat:3 }}
+            </div>
+            <div class="ui-block-b">
+                {{ voltasRealizadas }} / {{ qtdVoltas|floatformat:0 }}
+            </div>
+        </li>
+    </ul>
+
+    <ul data-role="listview" class="ui-grid-a" id="voltas">
+        {% for volta in voltas %}
+        <li>
+            <div class="ui-block-a">
+            {{ volta.numero }}
+                {% if volta.tempoDecorrido %}
+                    {{ volta.tempoDecorrido|floatformat:3 }}
+                {% else %}
+                    {{ volta.tempoTotal|floatformat:3 }}
+                {% endif %}
+            </div>
+
+            <div class="ui-block-b">
+                {{ volta.velocidadeMedia|floatformat:3 }}
+            </div>
+
+            <div class="ui-block-c">
+                {{ volta.velocidadeGeral|floatformat:3 }}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+

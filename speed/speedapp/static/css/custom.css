@@ -1,0 +1,163 @@
+
+/* Icones */
+.ui-icon-graph:after {
+    background-image: url("/static/midia/arestas.png");
+    background-size: 20px 20px;
+
+}
+
+.ui-icon-atletas:after {
+    background-image: url("/static/midia/atletas_icon.png");
+    background-size: 20px 20px;
+
+}
+
+.ui-icon-sensor:after {
+    background-image: url("/static/midia/sensor_icon.png");
+    background-size: 20px 20px;
+
+}
+
+.ui-icon-teste:after {
+    background-image: url("/static/midia/testes_icon.png");
+    background-size: 20px 20px;
+
+}
+
+.ui-icon-success:after{
+    background-image: url("/static/midia/success.png");
+    background-size: 25px 25px;
+}
+
+.ui-icon-warning:after{
+    background-image: url("/static/midia/warning.png");
+    background-size: 20px 20px;
+}
+
+
+.ui-icon-laser-gun:after{
+    background-image: url("/static/midia/laser_gun.png");
+    background-size: 20px 20px;
+}
+
+.ui-icon-regua:after{
+    background-image: url("/static/midia/regua.png");
+    background-size: 50px 50px;
+}
+
+.ui-icon-bandeira:after{
+    background-image: url("/static/midia/bandeira.png");
+    background-size: 20px 20px;
+}
+
+/* MENSAGENS PADROES */
+.msgFalhaOperacao {
+    background-color:#F44336 !important;
+    color:#fff !important;
+    text-shadow: 0 0 0 #fff !important;
+    text-shadow:0 0px 0 !important;
+}
+
+.msgSucessoOperacao{
+    background-color:#03A9F4 !important;
+    color:#fff !important;
+    text-shadow: 0 0 0 #fff !important;
+    text-shadow:0 0px 0 !important;
+}
+
+
+
+/* Conexao com WEBSOCKET */
+.webSocketFalhaConexao {
+    background-color:#F44336 !important;
+    color:#fff !important;
+    text-shadow: 0 0 0 #fff !important;
+    text-shadow:0 0px 0 !important;
+}
+
+.webSocketSucessoConexao{
+    background-color:#03A9F4 !important;
+    color:#fff !important;
+    text-shadow: 0 0 0 #fff !important;
+    text-shadow:0 0px 0 !important;
+}
+
+/* Circulos */
+.circle
+{
+    width:40px !important;
+    height:40px !important;
+    border-radius:50%;
+    border:4px solid rgba(62, 204, 255, 0.54);
+    font-size:20px;
+    color:#fff;
+    line-height:36px;
+    text-align:center;
+    background:#2196f3;
+    text-shadow:0 0 0 #fff !important;
+
+}
+
+.circle-sensor
+{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    border: 4px solid #638a98;
+    font-size:15px;
+    color:#fff;
+    line-height:29px;
+    text-align:center;
+    background:#673AB7;
+}
+
+.circle-sensor-exemplo
+{
+    width:40px !important;
+    height:40px !important;
+    border-radius:50%;
+    border:4px solid #FF5722 !important;
+    font-size:20px;
+    color:#fff;
+    line-height:36px;
+    text-align:center;
+    background:#ff9800;
+    text-shadow:0 0 0 #fff !important;
+
+}
+
+.centro {
+    margin:0 auto;
+    margin-left:auto;
+    margin-right:auto;
+    align:center;
+    text-align:center;
+}
+
+/* Fade out */
+.elementToFadeInAndOut {
+    -webkit-animation: fadeinout 1s linear forwards;
+    animation: fadeinout 1s linear forwards;
+}
+
+@-webkit-keyframes fadeinout {
+  100%,0% { opacity: 0; }
+  0% { opacity: 1; }
+}
+
+/* Fade in */
+.elementToFadeIn {
+    -webkit-animation: fadein 1s linear forwards;
+    animation: fadein 1s linear forwards;
+}
+
+@-webkit-keyframes fadein {
+  0%,100% { opacity: 0; }
+  0% { opacity: 1; }
+}
+
+/* Botoes */
+.ui-btn-icon-left:after, .ui-btn-icon-right:after, .ui-btn-icon-top:after, .ui-btn-icon-bottom:after, .ui-btn-icon-notext:after {
+    background-color: #FF5722 !important;
+}
+

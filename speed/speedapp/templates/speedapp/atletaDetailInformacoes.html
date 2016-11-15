@@ -1,0 +1,37 @@
+{% extends "speedapp/base.html" %}
+
+
+<!-- Informacoes do atleta -->
+{% block header %}
+<form action="saveAtletaInfo" method="POST" data-ajax="false">
+    {% csrf_token %}
+
+    {% if not novo %}
+        <input type="hidden" name="id" value="{{ atleta.id }}">
+    {% endif %}
+
+    <div data-role="header" data-position="fixed">
+        {% include "speedapp/includes/botaoVoltar.html" %}
+        <h6>{{ atleta.nome }}</h6>
+        <div data-role="navbar">
+            <ul>
+                <li>
+                    <button type="submit"
+                            class="ui-btn ui-btn-icon-right ui-icon-check" data-ajax="false">Salvar</button>
+                </li>
+            </ul>
+        </div><!-- /navbar -->
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+
+    <div role="main" class="ui-content">
+        <ul data-role="listview">
+            <li>
+                {{ formAtletaInfo }}
+            </li>
+        </ul>
+    </div>
+</form>
+{% endblock %}

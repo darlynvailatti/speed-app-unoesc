@@ -1,0 +1,69 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+    <div data-role="header" data-position="fixed">
+        {% include "speedapp/includes/botaoVoltar.html" %}
+        <h6>{{ atleta.nome }}</h6>
+        <a href="{{ atleta.id }}/deleteAtleta" class="ui-btn ui-btn-icon-right ui-icon-delete">Excluir</a>
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+    <form action="saveAleta" method="POST">
+
+        {% csrf_token %}
+        <input type="hidden"  name="id" value="{{ atleta.id }}">
+
+        <ul data-role="listview" data-inset="true" data-transition="slide">
+            <li>
+                <a href="#atletaTestes">Testes</a>
+            </li>
+
+            <li>
+                <a href="{{ atleta.id }}/atletaDetailInformacoes">Informações</a>
+            </li>
+        </ul>
+
+    </form>
+{% endblock %}
+
+
+{% block pages %}
+
+    <!-- Testes do atleta -->
+    <div data-role="page" id="atletaTestes">
+        <div data-role="header" data-position="fixed">
+            <!-- Botao voltar -->
+            <a class="ui-btn ui-btn-icon-left ui-icon-back" data-ajax="false"
+               href="/speedapp/atletas/{{ t.atleta.id }}">Voltar</a>
+
+            <h6>Testes de {{ atleta.nome }}</h6>
+
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <a href="{{ atleta.id }}/novoAtletaTeste"
+                   class="ui-btn ui-btn-icon-right ui-icon-plus" data-ajax="False">Novo</a>
+            </div>
+
+        </div>
+
+        <div role="main" class="ui-content">
+            <ul data-role="listview" data-inset="true">
+                {% for t in testes %}
+                    <li>
+                        <a href="{{ t.atleta.id }}/testes/{{ t.teste.id }}/atletaTesteDetail" data-ajax="false">
+                            <h1>{{ t.teste.id }}</h1>
+                            <h4>{{ t.teste.dataHora|date:"d/m/y h:m:s" }}</h4>
+                            <p>{{ t.teste.descricao }}</p>
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>
+                        <p><h2>Nenhum teste realizado...</h2></p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% include "speedapp/baseFooter.html" %}
+    </div>
+{% endblock %}

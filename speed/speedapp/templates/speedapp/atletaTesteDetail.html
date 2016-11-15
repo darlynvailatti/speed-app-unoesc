@@ -1,0 +1,105 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+<form action="/speedapp/atletas/{{ atletaTeste.atleta.id }}/saveAtletaTeste" method="POST" data-ajax="false">
+    <div data-role="header" data-position="fixed">
+        <a class="ui-btn ui-btn-icon-left ui-icon-back" data-ajax="false"
+           href="/speedapp/atletas/{{ atletaTeste.atleta.id }}#atletaTestes">Voltar</a>
+        <h6>Teste com Atleta</h6>
+
+        <div data-role="navbar">
+            <ul>
+                <li>
+                    <button type="submit"
+                            class="ui-btn ui-btn-icon-right ui-icon-check" data-ajax="false">Salvar</button>
+                </li>
+                {% if not novo %}
+                    {% if not atletaTeste.teste.testeFinalizado %}
+                        <li>
+                            <a href="monitorarTeste" class="ui-btn ui-btn-active ui-btn-icon-right ui-icon-gear"
+                               data-ajax="false">Iniciar</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="resetTeste" class="ui-btn ui-btn-active ui-btn-icon-right ui-icon-gear"
+                           data-ajax="false">Zerar</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div><!-- /navbar -->
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+
+    {% csrf_token %}
+
+    {% if not novo %}
+        <input type="hidden" name="id" value="{{ atletaTeste.id }}">
+    {% endif %}
+
+    {{ errors }}
+
+    <ul data-role="listview" data-inset="true">
+    {% if atletaTeste.id %}
+        <li>
+            <h1>Situação:</h1>
+            {% if atletaTeste.teste.testeFinalizado %}
+                <p>Finalizado em {{ atletaTeste.teste.dataHoraExecucao|date:"d/m/y h:m:s" }}</p>
+                <p>Voltas realizadas {{ atletaTeste.teste.voltas_realizadas }} / {{ atletaTeste.teste.qtdVoltas }}</p>
+            {% else %}
+                ainda não executado...
+            {% endif %}
+        </li>
+     {% endif %}
+        <li>
+            <h1>Quem fará o teste?</h1>{{ atletaTeste.atleta.nome }}
+        </li>
+    {% if not atletaTeste.id %}
+        <li class="ui-field-contain">
+            <h1>{{ formAtletaTeste.teste.label }}</h1>
+            {{ formAtletaTeste.testesModelos }}
+        </li>
+    {% else %}
+
+        <input type="hidden" name="testeAplicacao" value="{{ teste.id }}">
+        <li>
+            <h1>{{ formTeste.descricao.label }}</h1>
+            {{ formTeste.descricao }}
+
+            <h1>{{ formTeste.tipo.label }}</h1>
+            {{ formTeste.tipo }}
+
+            <fieldset class="ui-grid-a">
+
+                <div class="ui-block-a">
+                    <label for="{{ formTeste.qtdVoltas.id_for_label }}"><h1>Qtd.Voltas</h1></label>
+                    <input type="number"  id="{{ formTeste.qtdVoltas.id_for_label }}" name="{{ formTeste.qtdVoltas.name }}" value="{{ formTeste.qtdVoltas.value }}">
+                </div>
+
+                <div class="ui-block-b">
+                    <label for="{{ formTeste.tempoTotalMax.id_for_label }}"><h1>T.L (Seg.)</h1></label>
+                    <input type="number" id="{{ formTeste.tempoTotalMax.id_for_label }}" name="{{ formTeste.tempoTotalMax.name }}" value="{{ formTeste.tempoTotalMax.value }}">
+                </div>
+
+            </fieldset>
+        </li>
+
+        {% if atletaTeste.teste.testeFinalizado %}
+            <li>
+                <a href="/speedapp/atletas/{{ atletaTeste.atleta.id }}/testes/{{ atletaTeste.teste.id }}/resultados"
+                   data-ajax="false">Resultados</a>
+            </li>
+        {% endif %}
+
+
+        <li>
+            <a href="/speedapp/testes/{{ atletaTeste.teste.id }}/arestas"
+               class="ui-icon-graph">Arestas</a>
+        </li>
+
+    {% endif %}
+
+    </ul>
+</form>
+{% endblock %}

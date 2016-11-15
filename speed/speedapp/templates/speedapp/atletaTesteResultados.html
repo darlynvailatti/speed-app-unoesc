@@ -1,0 +1,57 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+    <div data-role="header" data-position="fixed">
+        <a class="ui-btn ui-btn-icon-left ui-icon-back" data-ajax="false"
+           href="/speedapp/atletas/{{ atletaTeste.atleta.id }}/testes/{{ atletaTeste.teste.id}}/atletaTesteDetail">Voltar</a>
+        <h6>Resultados teste {{ atletaTeste.teste.id }}</h6>
+
+        <div data-role="navbar">
+
+        </div><!-- /navbar -->
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+
+    <!-- Graficos -->
+    <script src="{{ STATIC_URL }}js/graficos/temposPorVolta.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/graficos/velocidadePorVolta.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/graficos/velocidadeDasVoltasPorAresta.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function () {
+
+
+            /*
+                Requisitar o JSON dos graficos
+             */
+
+            $.getJSON( "/speedapp/services/testes/{{ atletaTeste.teste.id }}/temposTotaisPorVolta", function( data ) {
+                temposPorVolta("graficoTemposPorVolta",data);
+            });
+
+            $.getJSON( "/speedapp/services/testes/{{ atletaTeste.teste.id }}/velocidadePorVolta", function( data ) {
+                velocidadePorVolta("graficoVelocidadePorVolta",data);
+            });
+
+            $.getJSON( "/speedapp/services/testes/{{ atletaTeste.teste.id }}/velocidadeDasVoltasPorAresta", function( data ) {
+                velocidadeDasVoltasPorAresta("graficoVelocidadeDasVoltasPorAresta",data);
+            });
+
+        });
+    </script>
+
+    <ul data-role="listview">
+        <li>
+            <div id="graficoTemposPorVolta"></div>
+        </li>
+        <li>
+            <div id="graficoVelocidadePorVolta"></div>
+        </li>
+        <li>
+            <div id="graficoVelocidadeDasVoltasPorAresta"></div>
+        </li>
+    </ul>
+
+{% endblock %}

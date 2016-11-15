@@ -1,0 +1,53 @@
+{% extends "speedapp/base.html" %}
+
+{% block header %}
+    <div data-role="header" data-position="fixed">
+
+        <!-- Botao voltar -->
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <a class="ui-btn ui-btn-icon-left ui-icon-back" data-ajax="false"
+               href="/speedapp/atletas">Voltar</a>
+        </div>
+
+        <!-- Titulo -->
+        <h6>Atletas</h6>
+
+        <!-- Novo -->
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <a href="novoAtleta" class="ui-btn ui-btn-icon-right ui-icon-plus">Novo</a>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+    <ul data-role="listview" data-inset="true" data-divider-theme="a" >
+
+        <!-- Agrupamento -->
+        {% regroup atletas|dictsort:"desporto.descricao" by desporto.descricao as desportos %}
+
+        {% for d in desportos %}
+            <li data-role="list-divider" >
+                <h1>{{ d.grouper }}</h1>
+            </li>
+
+            {% for a in d.list %}
+
+            <li>
+                <a href="{{ a.id }}" data-ajax="false">
+                    <!--<img src="#">-->
+                    <h3>{{ a.nome }} {{ a.sobreNome }}</h3>
+                </a>
+            </li>
+
+            {% endfor %}
+
+        {% empty %}
+        <li>
+            Ops, Nenhum atleta cadastrado...
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
